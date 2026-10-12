@@ -1,0 +1,27 @@
+const hre = require("hardhat");
+
+async function main() {
+  console.log("deploy voting contract......");
+  const Voting = await hre.ethers.getContractFactory("Voting");
+  const voting = await Voting.deploy();
+  await voting.waitForDeployment();
+  const address = await voting.getAddress();
+  console.log(`Voting contract deployed to: ${address}`);
+
+  console.log("Adding initial candidates....");
+  await voting.addCandidate("Alice");
+  await voting.addCandidate("Bob");
+  await voting.addCandidate("Charlie");
+  console.log("Initial candidates added: Alice, Bob, Charlie");
+  console.log("Deployment complete!");
+
+  console.log("====================================");
+  console.log("Contract Address (copy this for frontend):");
+  console.log(address);
+  console.log("====================================");
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
